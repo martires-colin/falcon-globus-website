@@ -3,10 +3,9 @@ from tracemalloc import start
 import globus_sdk
 from globus_sdk.scopes import GroupsScopes, AuthScopes, TransferScopes
 import webbrowser
-from urllib.parse import urlparse
-from urllib.parse import parse_qs
-
-from flask import Flask, request
+from urllib.parse import urlparse, parse_qs
+from flask import Flask, request, jsonify
+import json
 
 app = Flask(__name__)
 
@@ -52,47 +51,42 @@ def tokens():
 
 
 # RETRIEVE GROUP INFORMATION
-def getGroupInfo(gc):
-    print("\n---------------GROUP INFORMATION---------------\n")
-    for group in gc.get_my_groups():
-        # parse the group to get data for output
-        if group.get("enforce_session"):
-            session_enforcement = "strict"
-        else:
-            session_enforcement = "not strict"
-        roles = ",".join({m["role"] for m in group["my_memberships"]})
+@app.route("/group_info/<globus_groups_token>")
+def getGroupInfo(globus_groups_token):
+    groups_client = globus_sdk.GroupsClient(
+        authorizer=globus_sdk.AccessTokenAuthorizer(globus_groups_token)
+    )
+    group_data = []
+    groups = groups_client.get_my_groups()
+    for group in groups:
+        group_data.append(group)
 
-        print(
-          f'ID: {group["id"]}\n' \
-          f'Name: {group["name"]}\n' \
-          f'Type: {group["group_type"]}\n' \
-          f'Session Enforcement: {group["group_type"]}\n' \
-          f'Roles: {roles}\n'
-        )
-
+    return jsonify({"groups": group_data})
 
 # RETRIEVE USER INFO
-def getUserInfo(ac):
-    user_info = ac.oauth2_userinfo()
+@app.route("/user_info/<globus_auth_token>")
+def getUserInfo(globus_auth_token):
+    auth_client = globus_sdk.AuthClient(
+        authorizer=globus_sdk.AccessTokenAuthorizer(globus_auth_token)
+    )
+    user_info = auth_client.oauth2_userinfo()
 
     identities = []
     for identity in user_info["identity_set"]:
         identities.append(identity["identity_provider_display_name"])
-
     id_list = ', '.join(identities)
 
-    print('\n----------------USER INFORMATION----------------\n')
-    print(
-        f'Sub: {user_info["sub"]}\n' \
-        f'Organization: {user_info["organization"]}\n' \
-        f'Name: {user_info["name"]}\n' \
-        f'Username: {user_info["preferred_username"]}\n' \
-        f'IDP: {user_info["identity_provider"]}\n' \
-        f'IDP Display Name: {user_info["identity_provider_display_name"]}\n' \
-        f'Email: {user_info["email"]}\n' \
-        f'Last Authentication: {user_info["last_authentication"]}\n' \
-        f'Identity Set: {id_list}\n'
-    )
+    return {
+        'Sub': user_info["sub"],
+        'Organization': user_info["organization"],
+        'Name':user_info["name"],
+        'Username': user_info["preferred_username"],
+        'IDP': user_info["identity_provider"],
+        'IDP Display Name': user_info["identity_provider_display_name"],
+        'Email': user_info["email"],
+        'Last Authentication': user_info["last_authentication"],
+        'Identity Set': id_list
+    }
 
 
 # SEARCH COLLECTIONS

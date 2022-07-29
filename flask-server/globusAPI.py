@@ -9,7 +9,6 @@ import json
 
 app = Flask(__name__)
 
-
 CLIENT_ID = "fe1fe34a-b528-4c7d-8708-5ebcfc53cc5a"
 CLIENT_SECRET = "CQyDAvpU1oGp36Hs7omJZRFTzbLtPFOmje6yFCnmIGY="
 # REDIRECT_URI should probably be homepage
@@ -28,9 +27,8 @@ client = globus_sdk.ConfidentialAppAuthClient(CLIENT_ID, CLIENT_SECRET)
 @app.route("/auth_url")
 def startAuthorization():
     client.oauth2_start_flow(redirect_uri=REDIRECT_URI, requested_scopes=SCOPES)
-    return {
-        "auth_url": client.oauth2_get_authorize_url()
-    }
+    return {"auth_url": client.oauth2_get_authorize_url()}
+
 
 # can change "/code_page" later
 @app.route("/code_page")
@@ -169,9 +167,9 @@ def displayMenu():
         '6: Exit Program\n'
     )
 
-def main():
+# def main():
 
-    authClient, transferClient, groupsClient = startAuthorization()
+#     authClient, transferClient, groupsClient = startAuthorization()
 
     # while True:
     #     displayMenu()
@@ -190,7 +188,7 @@ def main():
     #     elif userInput == '6':
     #         break
 
-    transferFiles(transferClient)
+    # transferFiles(transferClient)
 
 if __name__ == "__main__":
     app.run(debug=True)

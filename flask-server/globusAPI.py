@@ -1,13 +1,38 @@
 from socket import timeout
+from ssl import HAS_TLSv1_1
 from tracemalloc import start
 import globus_sdk
 from globus_sdk.scopes import GroupsScopes, AuthScopes, TransferScopes
 import webbrowser
 from urllib.parse import urlparse, parse_qs
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template, redirect, url_for, session
 import json
 
 app = Flask(__name__)
+app.secret_key = '\xaa\xa7\xf5\xf9\xd3G:\x17\x0f\xd7\x9c\xee\x1c\x9a\xb4\x80\xb4\xaf&J\x8f\x07\xe2\xe2'
+
+
+
+# @app.route('/-tut')
+# @app.route('/home-tut')
+# def home_page_tut():
+#     return render_template('home-tut.html')
+
+# @app.route('/market-tut')
+# def market_page_tut():
+
+#     items = [
+#         {'id': 1, 'name': 'Phone', 'barcode': '893212299897', 'price': 500},
+#         {'id': 2, 'name': 'Laptop', 'barcode': '123985473165', 'price': 900},
+#         {'id': 3, 'name': 'Keyboard', 'barcode': '231985128446', 'price': 150}
+#     ]
+
+#     return render_template('market-tut.html', items=items)
+
+
+
+
+
 
 CLIENT_ID = "fe1fe34a-b528-4c7d-8708-5ebcfc53cc5a"
 CLIENT_SECRET = "CQyDAvpU1oGp36Hs7omJZRFTzbLtPFOmje6yFCnmIGY="
@@ -24,28 +49,38 @@ SCOPES = [
 
 client = globus_sdk.ConfidentialAppAuthClient(CLIENT_ID, CLIENT_SECRET)
 
-@app.route("/auth_url")
-def startAuthorization():
+@app.route("/")
+@app.route("/home")
+def home():
     client.oauth2_start_flow(redirect_uri=REDIRECT_URI, requested_scopes=SCOPES)
-    return {"auth_url": client.oauth2_get_authorize_url()}
 
+    return render_template(
+        'home.html',
+        auth_url=client.oauth2_get_authorize_url()
+    )
 
 # can change "/code_page" later
 @app.route("/code_page")
-def tokens():
+def code_page():
     auth_code = request.args.get('code')
     token_response = client.oauth2_exchange_code_for_tokens(auth_code)
 
-    # use token to retrive data from Resource Servers
-    globus_auth_data = token_response.by_resource_server["auth.globus.org"]
-    globus_transfer_data = token_response.by_resource_server["transfer.api.globus.org"]
-    globus_groups_data = token_response.by_resource_server["groups.api.globus.org"]
+    session["globus_auth_token"] = token_response.by_resource_server["auth.globus.org"]["access_token"]
+    session["globus_transfer_token"] = token_response.by_resource_server["transfer.api.globus.org"]["access_token"]
+    session["globus_groups_token"] = token_response.by_resource_server["groups.api.globus.org"]["access_token"]
 
-    return {
-        "globus_auth_token": globus_auth_data["access_token"],
-        "globus_transfer_token": globus_transfer_data["access_token"],
-        "globus_groups_token": globus_groups_data["access_token"]
-    }
+    return redirect(url_for('dashboard'))
+
+@app.route("/dashboard")
+def dashboard():
+
+    if "globus_auth_token" and "globus_transfer_token" and "globus_groups_token" in session:
+        return session["globus_auth_token"]
+    else:
+        return redirect(url_for("home"))
+
+
+
 
 
 # RETRIEVE GROUP INFORMATION
@@ -124,7 +159,7 @@ def getFiles(tc):
             f'link_last_modified: {entry["link_last_modified"]}\n' \
             f'link_size: {entry["link_size"]}\n' \
             f'link_target: {entry["link_target"]}\n' \
-            f'link_user: {entry["link_user"]}\n' \
+            f'link_user: {entry["link_user"]}\n'
         )
 
 

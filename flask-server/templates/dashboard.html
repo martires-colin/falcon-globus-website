@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block content %}
+
+This is the dashboard
+
+<h1>Files</h1>
+
+
+<!-- Maybe make this into a Form since we might be submitting data -->
+<table class="table table-hover table-dark">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Last Modified</th>
+            <th scope="col">Size</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for file in files %}
+        <tr>
+            <td></td>
+            <td>{{ file.name }}</td>
+            <td>{{ file.last_modified }}</td>
+            <td>{{ file.size }} B</td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+
+{{ files }}
+
+{% endblock %}

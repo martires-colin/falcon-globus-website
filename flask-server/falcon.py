@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 from socket import timeout
 from ssl import HAS_TLSv1_1
 from tracemalloc import start
@@ -9,7 +10,7 @@ from flask import Flask, request, jsonify, render_template, redirect, url_for, s
 import json
 
 app = Flask(__name__)
-app.secret_key = '\xaa\xa7\xf5\xf9\xd3G:\x17\x0f\xd7\x9c\xee\x1c\x9a\xb4\x80\xb4\xaf&J\x8f\x07\xe2\xe2'
+app.secret_key = 'c9db57edadab97704a3b696d'
 
 
 
@@ -67,21 +68,45 @@ def code_page():
 
     return redirect(url_for('dashboard'))
 
-@app.route("/dashboard")
+@app.route("/dashboard", methods=["GET", "POST"])
 def dashboard():
 
-    authToken = session["globus_auth_token"]
-    transferToken = session["globus_transfer_token"]
-    groupsToken = session["globus_groups_token"]
+    # authToken = session["globus_auth_token"]
+    # transferToken = session["globus_transfer_token"]
+    # groupsToken = session["globus_groups_token"]
     if "globus_auth_token" and "globus_transfer_token" and "globus_groups_token" in session:
         
+        if request.method == "POST":
+
+            srcCollection = ''
+            srcPath = ''
+            destCollection = ''
+            destPath = ''
+
+            srcCollection = request.form["srcCollection"]
+            srcPath = request.form["srcPath"]
+            destCollection = request.form["destCollection"]
+            destPath = request.form["destPath"]
+
+            if srcCollection != '' and srcPath != '':
+                srcFiles = getFiles(srcCollection, srcPath)
+            else:
+                srcFiles = []
+
+            if destCollection != '' and destPath != '':
+                destFiles = getFiles(destCollection, destPath)
+            else:
+                destFiles = []
+
+            return render_template('dashboard.html', srcFiles=srcFiles, destFiles=destFiles, isValid=True)
+
+        else:
+            return render_template('dashboard.html', isValid=False)
+
         # change epID and path to variables retireved from search?
-        files = getFiles('ceea5ca0-89a9-11e7-a97f-22000a92523b', '/~/')
-        
-        
-        
-        
-        return render_template('dashboard.html', files=files)
+        # files = getFiles('ceea5ca0-89a9-11e7-a97f-22000a92523b', '/~/')
+                
+        # return render_template('dashboard.html', files=files)
     else:
         return redirect(url_for('home'))
 

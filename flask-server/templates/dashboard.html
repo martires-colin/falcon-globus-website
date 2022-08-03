@@ -10,7 +10,7 @@ Dashboard
     <div class="row">
         <h1 class="text-center">Falcon File Transfer</h1>
     </div>
-    <div class="row">
+    <!-- <div class="row">
         <form action="#" method="post">
             <div class="row">
                 <div class="col-md-6">
@@ -30,9 +30,42 @@ Dashboard
                 </div>
             </div>
         </form>
-    </div>
+    </div> -->
+    <div class="row">
+        <div class="container" id="srcSearch">
+            <form action="#" method="post" id="srcForm">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>Source</p>
+                        <p><input type="text" name="srcCollection" id="srcCollectionInput" placeholder="Collection Endpoint"/></p>
+                        <p><input type="text" name="srcPath" id="srcPathInput" placeholder="Path"/></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="d-flex justify-content-center">
+                        <input type="submit" value="submit" id="srcSubmit"/> 
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="container" id="destSearch">
+            <form action="#" method="post" id="destForm">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>Destination</p>
+                        <p><input type="text" name="destCollection" id="destCollectionInput" placeholder="Collection Endpoint"/></p>
+                        <p><input type="text" name="destPath" id="destPathInput" placeholder="Path"/></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="d-flex justify-content-center">
+                        <input type="submit" value="submit" id="destSubmit"/> 
+                    </div>
+                </div>
+            </form>
+        </div>
 
-    <!-- {% if isValid %} -->
+    </div>
 
     <div class="row">
         <div class="col-md-6">
@@ -45,16 +78,7 @@ Dashboard
                         <th scope="col">Size</th>
                     </tr>
                 </thead>
-                <tbody>
-                    {% for file in srcFiles %}
-                    <tr>
-                        <td></td>
-                        <td>{{ file.name }}</td>
-                        <td>{{ file.last_modified }}</td>
-                        <td>{{ file.size }} B</td>
-                    </tr>
-                    {% endfor %}
-            
+                <tbody id="srcTable">
                 </tbody>
             </table>
         </div>
@@ -68,29 +92,11 @@ Dashboard
                         <th scope="col">Size</th>
                     </tr>
                 </thead>
-                <tbody>
-                    {% for file in destFiles %}
-                    <tr>
-                        <td></td>
-                        <td>{{ file.name }}</td>
-                        <td>{{ file.last_modified }}</td>
-                        <td>{{ file.size }} B</td>
-                    </tr>
-                    {% endfor %}
-            
+                <tbody id="destTable">            
                 </tbody>
             </table>
         </div>
-
-        <!-- {% else %}
-        
-        <h1>NONE</h1>
-    
-        {%endif %} -->
-    
-        </div>
+    </div>
 </div>
-
-<!-- {{ files }} -->
 
 {% endblock %}

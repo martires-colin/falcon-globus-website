@@ -74,42 +74,71 @@ def dashboard():
     # authToken = session["globus_auth_token"]
     # transferToken = session["globus_transfer_token"]
     # groupsToken = session["globus_groups_token"]
-    if "globus_auth_token" and "globus_transfer_token" and "globus_groups_token" in session:
+    # if "globus_auth_token" and "globus_transfer_token" and "globus_groups_token" in session:
         
-        if request.method == "POST":
+        # if request.method == "POST":
 
-            srcCollection = ''
-            srcPath = ''
-            destCollection = ''
-            destPath = ''
+        #     srcCollection = ''
+        #     srcPath = ''
+        #     destCollection = ''
+        #     destPath = ''
 
-            srcCollection = request.form["srcCollection"]
-            srcPath = request.form["srcPath"]
-            destCollection = request.form["destCollection"]
-            destPath = request.form["destPath"]
+        #     srcCollection = request.form["srcCollection"]
+        #     srcPath = request.form["srcPath"]
+        #     destCollection = request.form["destCollection"]
+        #     destPath = request.form["destPath"]
 
-            if srcCollection != '' and srcPath != '':
-                srcFiles = getFiles(srcCollection, srcPath)
-            else:
-                srcFiles = []
+        #     if srcCollection != '' and srcPath != '':
+        #         srcFiles = getFiles(srcCollection, srcPath)
+        #     else:
+        #         srcFiles = []
 
-            if destCollection != '' and destPath != '':
-                destFiles = getFiles(destCollection, destPath)
-            else:
-                destFiles = []
+        #     if destCollection != '' and destPath != '':
+        #         destFiles = getFiles(destCollection, destPath)
+        #     else:
+        #         destFiles = []
 
-            return render_template('dashboard.html', srcFiles=srcFiles, destFiles=destFiles, isValid=True)
+        #     return render_template('dashboard.html', srcFiles=srcFiles, destFiles=destFiles, isValid=True)
 
-        else:
-            return render_template('dashboard.html', isValid=False)
+        # else:
+        #     return render_template('dashboard.html', isValid=False)
 
         # change epID and path to variables retireved from search?
         # files = getFiles('ceea5ca0-89a9-11e7-a97f-22000a92523b', '/~/')
                 
         # return render_template('dashboard.html', files=files)
-    else:
-        return redirect(url_for('home'))
+    # else:
+    #     return redirect(url_for('home'))
 
+    return render_template('dashboard.html')    # 
+
+
+@app.route('/updateSrc', methods=['POST'])
+def updateSrc():
+
+    srcCollection = request.form["srcCollection"]
+    srcPath = request.form["srcPath"]
+
+    if srcCollection and srcPath:
+        srcFiles = getFiles(srcCollection, srcPath)
+    else:
+        srcFiles = []
+
+    return jsonify({'files': srcFiles["DATA"]})
+
+
+@app.route('/updateDest', methods=['POST'])
+def updateDest():
+
+    destCollection = request.form["destCollection"]
+    destPath = request.form["destPath"]
+
+    if destCollection and destPath:
+        destFiles = getFiles(destCollection, destPath)
+    else:
+        destFiles = []
+
+    return jsonify({'files': destFiles["DATA"]})
 
 
 

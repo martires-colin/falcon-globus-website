@@ -10,57 +10,31 @@ Dashboard
     <div class="row">
         <h1 class="text-center">Falcon File Transfer</h1>
     </div>
-    <!-- <div class="row">
-        <form action="#" method="post">
-            <div class="row">
-                <div class="col-md-6">
-                    <p>Source</p>
-                    <p><input type="text" name="srcCollection" placeholder="Collection Endpoint"/></p>
-                    <p><input type="text" name="srcPath" placeholder="Path"/></p>
-                </div>
-                <div class="col-md-6">
-                    <p>Destination</p>
-                    <p><input type="text" name="destCollection" placeholder="Collection Endpoint"/></p>
-                    <p><input type="text" name="destPath" placeholder="Path"/></p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="d-flex justify-content-center">
-                    <input type="submit" value="submit" /> 
-                </div>
-            </div>
-        </form>
-    </div> -->
+
     <div class="row">
-        <div class="container" id="srcSearch">
+        <div class="container col-md-6" id="srcSearch">
             <form action="#" method="post" id="srcForm">
-                <div class="row">
-                    <div class="col-md-6">
-                        <p>Source</p>
-                        <p><input type="text" name="srcCollection" id="srcCollectionInput" placeholder="Collection Endpoint"/></p>
-                        <p><input type="text" name="srcPath" id="srcPathInput" placeholder="Path"/></p>
-                    </div>
+                <div class="d-flex flex-column">
+                    <p class="text-center">Source</p>
+                    <input class="flex-grow-1 mb-3" type="text" name="srcCollection" id="srcCollectionInput"
+                        placeholder="Collection Endpoint" />
+                    <input class="flex-grow-1 mb-3" type="text" name="srcPath" id="srcPathInput" placeholder="Path" />
                 </div>
-                <div class="row">
-                    <div class="d-flex justify-content-center">
-                        <input type="submit" value="submit" id="srcSubmit"/> 
-                    </div>
+                <div class="d-flex justify-content-center mb-3">
+                    <input type="submit" value="submit" id="srcSubmit" />
                 </div>
             </form>
         </div>
-        <div class="container" id="destSearch">
+        <div class="container col-md-6" id="destSearch">
             <form action="#" method="post" id="destForm">
-                <div class="row">
-                    <div class="col-md-6">
-                        <p>Destination</p>
-                        <p><input type="text" name="destCollection" id="destCollectionInput" placeholder="Collection Endpoint"/></p>
-                        <p><input type="text" name="destPath" id="destPathInput" placeholder="Path"/></p>
-                    </div>
+                <div class="d-flex flex-column">
+                    <p class="text-center">Destination</p>
+                    <input class="flex-grow-1 mb-3" type="text" name="destCollection" id="destCollectionInput"
+                        placeholder="Collection Endpoint" />
+                    <input class="flex-grow-1 mb-3" type="text" name="destPath" id="destPathInput" placeholder="Path" />
                 </div>
-                <div class="row">
-                    <div class="d-flex justify-content-center">
-                        <input type="submit" value="submit" id="destSubmit"/> 
-                    </div>
+                <div class="d-flex justify-content-center mb-3">
+                    <input type="submit" value="submit" id="destSubmit" />
                 </div>
             </form>
         </div>
@@ -69,7 +43,7 @@ Dashboard
 
     <div class="row">
         <div class="col-md-6">
-            <table class="table table-hover table-dark">
+            <table class="table table-hover table-dark mb-0">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -78,12 +52,16 @@ Dashboard
                         <th scope="col">Size</th>
                     </tr>
                 </thead>
-                <tbody id="srcTable">
-                </tbody>
             </table>
+            <div class="overflow-auto" style="max-height: 450px;">
+                <table class="table table-hover table-dark">
+                    <tbody id="srcTable">
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="col-md-6">
-            <table class="table table-hover table-dark">
+            <table class="table table-hover table-dark mb-0">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -92,9 +70,13 @@ Dashboard
                         <th scope="col">Size</th>
                     </tr>
                 </thead>
-                <tbody id="destTable">            
-                </tbody>
             </table>
+            <div class="overflow-auto" style="max-height: 450px;">
+                <table class="table table-hover table-dark">
+                    <tbody id="destTable">
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

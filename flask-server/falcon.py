@@ -110,7 +110,7 @@ def dashboard():
     # else:
     #     return redirect(url_for('home'))
 
-    return render_template('dashboard.html')    # 
+    return render_template('dashboard.html')
 
 
 @app.route('/updateSrc', methods=['POST'])

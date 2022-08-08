@@ -13,7 +13,7 @@ Dashboard
 
     <div class="row">
         <div class="container d-flex justify-content-center my-3">
-            <button type="button" class="btn btn-info">Start Transfer</button>
+            <button type="submit" class="btn btn-info" id="transferFiles" form="transferFilesForm">Start Transfer</button>
         </div>
     </div>
 
@@ -43,8 +43,10 @@ Dashboard
                                 <th scope="col">Size</th>
                             </tr>
                         </thead>
-                        <tbody id="srcTable">
-                        </tbody>
+                        <form action="#" method="post" id="transferFilesForm">
+                            <tbody id="srcTable">
+                            </tbody>
+                        </form>
                     </table>
                 </div>
             </div>

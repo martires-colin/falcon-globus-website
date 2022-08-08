@@ -23,7 +23,7 @@ $(document).ready(function() {
                 const newFileLastMod = document.createElement("td")
                 const newFileSize = document.createElement("td")
 
-                newCheckBox.innerHTML = '<input type="checkbox" name="fileSelect">'
+                newCheckBox.innerHTML = '<input type="checkbox" id="fileSelect" name="fileSelect" value="' + file.name + '">'
                 const nameContent = document.createTextNode(file.name)
                 const lastModContent = document.createTextNode(file.last_modified)
                 const sizeContent = document.createTextNode(file.size + " B")
@@ -38,8 +38,7 @@ $(document).ready(function() {
                 newTableEntry.appendChild(newFileSize)
                 
                 $('#srcTable').append(newTableEntry)
-                
-                console.log(file.name)
+                // console.log(file.name)
             })
 
             $('#srcFileDisplay').show()
@@ -87,7 +86,7 @@ $(document).ready(function() {
                 newTableEntry.appendChild(newFileSize)
                 
                 $('#destTable').append(newTableEntry)
-                console.log(file.name)
+                // console.log(file.name)
             })
 
             $('#destFileDisplay').show()
@@ -96,3 +95,26 @@ $(document).ready(function() {
     });
 });
 
+$(document).ready(function() {
+
+    $('#transferFilesForm').submit(function(event) {
+        let checkboxes = document.querySelectorAll('input[name="fileSelect"]:checked');
+        let values = [];
+        checkboxes.forEach((checkbox) => {
+            values.push(checkbox.value);
+        });
+        
+        $.ajax({
+            data: {
+                selectedFiles: values
+            },
+            type: 'POST',
+            url: '/transferFiles'
+        })
+        .done(function(data) {
+            console.log(data)
+        });
+        
+        event.preventDefault()
+    });
+});
